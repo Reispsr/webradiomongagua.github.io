@@ -106,6 +106,7 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+            flex-shrink: 0; /* Evitar que o logo encolha demais */
         }
         .logo-header span {
             font-weight: 300; color: var(--text-muted);
@@ -152,9 +153,9 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color var(--transition-fast), transform var(--transition-fast);
-            display: flex;
+            display: flex; /* Mantido para alinhamento interno do span.icon e span de texto */
             align-items: center;
-            gap: 8px;
+            gap: 8px; /* Padrão para desktop */
         }
         .request-music-button-header:hover {
             background-color: var(--accent-color-light);
@@ -170,6 +171,7 @@
             cursor: pointer;
             padding: 10px;
             border-radius: var(--border-radius-round);
+            flex-shrink: 0; /* Evitar que o hamburger encolha */
         }
         .mobile-menu-toggle:hover {
             background-color: var(--background-hover);
@@ -378,7 +380,7 @@
         .music-request-info .email-link:hover { background-color: var(--accent-color-light); transform: translateY(-2px); }
 
 
-        /* --- Responsive Adjustments for Header --- */
+        /* --- Responsive Adjustments --- */
         @media (min-width: 769px) {
             .logo-header span { display: inline; } /* Mostrar "Web Rádio" no logo */
         }
@@ -411,12 +413,19 @@
             }
             .nav-menu-header li:last-child a { border-bottom: none; }
 
-            .request-music-button-header { /* Opcional: Mover para dentro do menu mobile ou manter */
-                font-size: 0.9em;
-                padding: 8px 15px;
+            /* Botão Pedir Música: A partir de 768px para baixo, mostrar apenas o ícone */
+            .request-music-button-header {
+                padding: 8px 10px; /* Padding ajustado para um botão só com ícone */
+                font-size: 1.1em;  /* Ajuste o tamanho do ícone se necessário */
+                gap: 0; /* Remover gap interno pois só haverá o ícone */
             }
-            .request-music-button-header .icon { display: none; } /* Esconder ícone se o texto for longo */
-
+            .request-music-button-header span:not(.icon) { /* Esconde o texto "Pedir Música" */
+                display: none;
+            }
+            .request-music-button-header .icon { /* Garante que o ícone seja exibido e remove margem */
+                display: inline-block; 
+                margin-right: 0;
+            }
 
             .mobile-menu-toggle { display: block; /* Mostrar botão hamburger */ }
             .main-content { padding: 20px; }
@@ -438,30 +447,30 @@
             .play-button { /* O container do botão play/pause */
                 width: 40px;      /* Diminuído */
                 height: 40px;     /* Diminuído */
-                font-size: 1.5em; /* Tamanho do ícone play/pause dentro do botão (menor que o 1.7em anterior) */
+                font-size: 1.5em; /* Tamanho do ícone play/pause dentro do botão */
             }
-            #audioVisualizer { display: none; } /* Correto */
+            #audioVisualizer { display: none; } 
             .track-info {
-                flex-shrink: 1;    /* Permitir que encolha, se necessário */
-                min-width: 70px;   /* Mínimo bem pequeno para caber nome curto */
-                margin-right: 5px; /* Espaço menor antes dos controles */
+                flex-shrink: 1;    
+                min-width: 70px;   
+                margin-right: 5px; 
             }
-            .track-info #nowPlayingProgram { font-size: 0.85em; } /* Reduzido texto da faixa */
-            .track-info #nowPlayingTrack { font-size: 0.7em; }   /* Reduzido texto da música */
+            .track-info #nowPlayingProgram { font-size: 0.85em; } 
+            .track-info #nowPlayingTrack { font-size: 0.7em; }   
             
             .time-display {
-                font-size: 0.75em; /* Reduzido texto do tempo */
-                margin: 0 4px;     /* Ajustada margem do tempo */
-                min-width: 35px;   /* Ajustado min-width para o tempo */
+                font-size: 0.75em; 
+                margin: 0 4px;     
+                min-width: 35px;   
             }
-            .volume-control { display: none; } /* Correto */
+            .volume-control { display: none; } 
             
+            /* Botão Pedir Música: Ajuste fino para telas ainda menores */
             .request-music-button-header {
-                padding: 8px 12px;
-                font-size: 0.85em;
+                padding: 7px 9px; /* Um pouco menor */
+                font-size: 1em;   /* Ícone um pouco menor */
             }
-            .request-music-button-header span:not(.icon) { display: none; } /* Mostrar só o ícone */
-            .request-music-button-header .icon { margin-right: 0; }
+            /* As regras de display do texto e ícone já foram definidas em max-width: 768px e são herdadas */
         }
 
     </style>
@@ -472,7 +481,7 @@
             <a href="#inicio" class="logo-header nav-link" data-page="page-inicio">
                 Mongaguá<span>Web Rádio</span>
             </a>
-            <nav class="nav-menu-header" id="navMenuHeader">
+            <nav class="nav-menu-header" id="navMenuHeaderElement"> <!-- ID alterado para evitar conflito com variável JS -->
                 <ul>
                     <li><a href="#inicio" class="nav-link active" data-page="page-inicio">🏠 Início</a></li>
                     <li><a href="#programacao" class="nav-link" data-page="page-programacao">🗓 Programação</a></li>
@@ -595,7 +604,8 @@
         const openRequestModalButton = document.getElementById('openRequestModalButton');
         const closeRequestModalButton = document.getElementById('closeRequestModalButton');
 
-        const navMenuHeader = document.getElementById('navMenuHeader').querySelector('ul');
+        // const navMenuHeader = document.getElementById('navMenuHeader').querySelector('ul'); // ID original do <nav>
+        const navMenuUL = document.getElementById('navMenuHeaderElement').querySelector('ul'); // Usando novo ID para o <nav> e pegando a <ul>
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         
         document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -645,20 +655,23 @@
         }
 
         // --- Mobile Menu Toggle ---
-        if (mobileMenuToggle) {
+        if (mobileMenuToggle && navMenuUL) { // Checa se ambos existem
             mobileMenuToggle.addEventListener('click', () => {
-                const isOpen = navMenuHeader.classList.toggle('mobile-menu-open');
+                const isOpen = navMenuUL.classList.toggle('mobile-menu-open');
                 mobileMenuToggle.classList.toggle('active', isOpen);
                 mobileMenuToggle.setAttribute('aria-expanded', isOpen.toString());
             });
         }
         // Close mobile menu when a link is clicked
-        document.querySelectorAll('#navMenuHeader ul a').forEach(link => {
+        // Seleciona links dentro da ul que é referenciada por navMenuUL
+        document.querySelectorAll('#navMenuHeaderElement ul a').forEach(link => {
             link.addEventListener('click', () => {
-                if (navMenuHeader.classList.contains('mobile-menu-open')) {
-                    navMenuHeader.classList.remove('mobile-menu-open');
-                    mobileMenuToggle.classList.remove('active');
-                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                if (navMenuUL && navMenuUL.classList.contains('mobile-menu-open')) {
+                    navMenuUL.classList.remove('mobile-menu-open');
+                    if (mobileMenuToggle) {
+                        mobileMenuToggle.classList.remove('active');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    }
                 }
             });
         });
@@ -742,14 +755,14 @@
 
         const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.page');
-        const mainContentArea = document.querySelector('.content-wrapper-main'); // Mudança aqui para .content-wrapper-main
+        const contentWrapperMain = document.querySelector('.content-wrapper-main'); 
 
         function showPage(pageId) {
             pages.forEach(p => p.classList.remove('active'));
             const targetPage = document.getElementById(pageId);
             if (targetPage) { 
                 targetPage.classList.add('active'); 
-                if (mainContentArea) mainContentArea.scrollTop = 0; // Scroll para o topo do wrapper
+                if (contentWrapperMain) contentWrapperMain.scrollTop = 0; 
             }
             navLinks.forEach(l => {
                 l.classList.remove('active');
@@ -765,11 +778,12 @@
                     showPage(pageId);
                     history.pushState({ page: pageId }, '', link.getAttribute('href'));
                 }
-                 // Fechar menu mobile se estiver aberto
-                if (navMenuHeader.classList.contains('mobile-menu-open')) {
-                    navMenuHeader.classList.remove('mobile-menu-open');
-                    mobileMenuToggle.classList.remove('active');
-                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                if (navMenuUL && navMenuUL.classList.contains('mobile-menu-open')) {
+                    navMenuUL.classList.remove('mobile-menu-open');
+                    if (mobileMenuToggle) {
+                        mobileMenuToggle.classList.remove('active');
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    }
                 }
             });
         });
@@ -832,7 +846,7 @@
             bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
             visualizerCanvas = document.getElementById('audioVisualizer');
-            if (!visualizerCanvas) return; // Certificar que o canvas existe
+            if (!visualizerCanvas) return; 
             visualizerCtx = visualizerCanvas.getContext('2d');
             visualizerInitialized = true;
             drawVisualizer();
@@ -864,16 +878,11 @@
             }
         }
 
-        // Correção: mainContentArea para scroll de página
-        // const mainContentArea = document.querySelector('.main-content'); // Esta linha estava duplicada e incorreta para o propósito.
-        // A linha correta está dentro da função showPage, usando o seletor '.content-wrapper-main'
-
         updatePlayerDisplay();
         updateDateTime();
         updateMuteButtonIcon();
         initializePageFromURL();
-        // Tenta configurar o visualizador somente se houver contexto de áudio e o player estiver pronto para tocar
-        // A chamada para setupVisualizer() agora está dentro de togglePlayPause() e após a tentativa de play
+        // A chamada para setupVisualizer() foi removida daqui para ser chamada apenas após interação (primeiro play)
     });
     </script>
 </body>

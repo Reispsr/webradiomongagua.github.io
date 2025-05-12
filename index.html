@@ -106,23 +106,23 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            flex-shrink: 0; /* Evitar que o logo encolha demais */
+            flex-shrink: 0; 
         }
         .logo-header span {
             font-weight: 300; color: var(--text-muted);
             font-size: 0.5em; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px;
-            display: none; /* Ocultar por padrão, mostrar em telas maiores */
+            display: none; 
         }
 
         .nav-menu-header {
             display: flex;
             align-items: center;
-            gap: 10px; /* Espaço entre itens de navegação e botão Pedir Musica */
+            gap: 10px; 
         }
         .nav-menu-header ul {
             list-style: none;
             display: flex;
-            gap: 5px; /* Espaço entre links */
+            gap: 5px; 
         }
         .nav-menu-header li a {
             padding: 10px 15px;
@@ -153,9 +153,9 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color var(--transition-fast), transform var(--transition-fast);
-            display: flex; /* Mantido para alinhamento interno do span.icon e span de texto */
+            display: flex; 
             align-items: center;
-            gap: 8px; /* Padrão para desktop */
+            gap: 8px; 
         }
         .request-music-button-header:hover {
             background-color: var(--accent-color-light);
@@ -163,7 +163,7 @@
         }
 
         .mobile-menu-toggle {
-            display: none; /* Oculto por padrão */
+            display: none; 
             background: none;
             border: none;
             color: var(--text-primary);
@@ -171,7 +171,7 @@
             cursor: pointer;
             padding: 10px;
             border-radius: var(--border-radius-round);
-            flex-shrink: 0; /* Evitar que o hamburger encolha */
+            flex-shrink: 0; 
         }
         .mobile-menu-toggle:hover {
             background-color: var(--background-hover);
@@ -184,15 +184,15 @@
 
         /* --- Main Content Area --- */
         .content-wrapper-main {
-            flex-grow: 1; /* Ocupa o espaço restante entre header e player */
+            flex-grow: 1; 
             overflow-y: auto;
-            padding-top: var(--header-height); /* Espaço para o header fixo */
-            padding-bottom: var(--player-bar-height); /* Espaço para o player fixo */
+            padding-top: var(--header-height); 
+            padding-bottom: var(--player-bar-height); 
         }
         .main-content {
-            padding: 30px 35px; /* Padding interno do conteúdo */
-            max-width: 1200px; /* Limita a largura do conteúdo central */
-            margin: 0 auto; /* Centraliza o conteúdo */
+            padding: 30px 35px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
         }
 
         .page { display: none; animation: contentFadeIn var(--transition-base) forwards; }
@@ -268,10 +268,10 @@
             height: var(--player-bar-height);
             background: linear-gradient(to top, var(--background-surface) 70%, var(--background-surface-alt));
             padding: 0 30px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.35); z-index: 999; /* Abaixo do header */
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.35); z-index: 999; 
             display: flex; align-items: center; justify-content: space-between;
             border-top: 1px solid var(--border-color);
-            position: fixed; /* Fixa o player na base */
+            position: fixed; 
             bottom: 0;
             left: 0;
             right: 0;
@@ -345,13 +345,16 @@
             display: none; position: fixed; z-index: 2000; left: 0; top: 0;
             width: 100%; height: 100%; background-color: hsla(220, 20%, 5%, 0.6); 
             backdrop-filter: blur(6px) saturate(120%); 
-            animation: modalFadeIn var(--transition-base) forwards; align-items: center; justify-content: center;
+            animation: modalFadeIn var(--transition-base) forwards; 
+            align-items: center; justify-content: center;
+            padding: 15px; /* Adicionado para evitar que o conteúdo encoste nas bordas em telas pequenas */
         }
         @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .modal-content {
             background-color: var(--background-elevated); padding: 30px 35px;
-            border: 1px solid var(--border-color-light); width: 90%; max-width: 500px;
+            border: 1px solid var(--border-color-light); width: 100%; /* Alterado para 100% para respeitar o padding do .modal */
+            max-width: 500px;
             border-radius: var(--border-radius-large); position: relative;
             box-shadow: var(--shadow-large);
             animation: modalSlideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
@@ -379,10 +382,46 @@
         }
         .music-request-info .email-link:hover { background-color: var(--accent-color-light); transform: translateY(-2px); }
 
+        /* --- APK Pop-up Specific Styles --- */
+        .apk-popup-content p {
+            font-size: 1.05em; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;
+        }
+        .download-apk-button {
+            display: block; /* Para ocupar largura total ou ser centralizado mais facilmente */
+            width: fit-content;
+            margin: 20px auto 10px;
+            padding: 12px 25px;
+            background-color: var(--accent-color);
+            color: var(--text-on-accent);
+            border: none;
+            border-radius: var(--border-radius-base);
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+        }
+        .download-apk-button:hover {
+            background-color: var(--accent-color-light);
+            transform: translateY(-2px);
+        }
+        .dont-show-again-container {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+        .dont-show-again-container input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: var(--primary-color); /* Estiliza a cor do checkbox quando marcado */
+            width: 16px;
+            height: 16px;
+        }
 
         /* --- Responsive Adjustments --- */
         @media (min-width: 769px) {
-            .logo-header span { display: inline; } /* Mostrar "Web Rádio" no logo */
+            .logo-header span { display: inline; } 
         }
 
         @media (max-width: 768px) {
@@ -390,9 +429,9 @@
             .logo-header { font-size: 1.6em; }
             
             .nav-menu-header ul {
-                display: none; /* Esconder lista de links */
+                display: none; 
                 position: absolute;
-                top: var(--header-height); /* Abaixo do header */
+                top: var(--header-height); 
                 left: 0;
                 right: 0;
                 background-color: var(--background-elevated);
@@ -402,7 +441,7 @@
                 border-top: 1px solid var(--border-color);
             }
             .nav-menu-header ul.mobile-menu-open {
-                display: flex; /* Mostrar quando ativo */
+                display: flex; 
             }
             .nav-menu-header li { width: 100%; }
             .nav-menu-header li a {
@@ -413,21 +452,20 @@
             }
             .nav-menu-header li:last-child a { border-bottom: none; }
 
-            /* Botão Pedir Música: A partir de 768px para baixo, mostrar apenas o ícone */
             .request-music-button-header {
-                padding: 8px 10px; /* Padding ajustado para um botão só com ícone */
-                font-size: 1.1em;  /* Ajuste o tamanho do ícone se necessário */
-                gap: 0; /* Remover gap interno pois só haverá o ícone */
+                padding: 8px 10px; 
+                font-size: 1.1em;  
+                gap: 0; 
             }
-            .request-music-button-header span:not(.icon) { /* Esconde o texto "Pedir Música" */
+            .request-music-button-header span:not(.icon) { 
                 display: none;
             }
-            .request-music-button-header .icon { /* Garante que o ícone seja exibido e remove margem */
+            .request-music-button-header .icon { 
                 display: inline-block; 
                 margin-right: 0;
             }
 
-            .mobile-menu-toggle { display: block; /* Mostrar botão hamburger */ }
+            .mobile-menu-toggle { display: block; }
             .main-content { padding: 20px; }
             .page h2 {font-size: 2em;}
         }
@@ -435,19 +473,19 @@
         @media (max-width: 576px) {
             .player-bar {
                 height: 70px;
-                padding: 0 10px; /* Reduzido padding lateral */
+                padding: 0 10px; 
             }
             .player-controls-group {
-                gap: 5px; /* Reduzido gap interno dos grupos de controle */
+                gap: 5px; 
             }
-            .control-button { /* Afeta share, mute e o ícone dentro do playPause */
-                font-size: 1.3em; /* Reduzido tamanho geral dos ícones/botões */
-                padding: 6px;     /* Reduzido padding dos botões */
+            .control-button { 
+                font-size: 1.3em; 
+                padding: 6px;     
             }
-            .play-button { /* O container do botão play/pause */
-                width: 40px;      /* Diminuído */
-                height: 40px;     /* Diminuído */
-                font-size: 1.5em; /* Tamanho do ícone play/pause dentro do botão */
+            .play-button { 
+                width: 40px;      
+                height: 40px;     
+                font-size: 1.5em; 
             }
             #audioVisualizer { display: none; } 
             .track-info {
@@ -465,12 +503,29 @@
             }
             .volume-control { display: none; } 
             
-            /* Botão Pedir Música: Ajuste fino para telas ainda menores */
             .request-music-button-header {
-                padding: 7px 9px; /* Um pouco menor */
-                font-size: 1em;   /* Ícone um pouco menor */
+                padding: 7px 9px; 
+                font-size: 1em;   
             }
-            /* As regras de display do texto e ícone já foram definidas em max-width: 768px e são herdadas */
+
+            .modal-content { /* Ajuste para modal em telas pequenas */
+                padding: 25px 20px;
+            }
+            .modal-content h3 {
+                font-size: 1.5em;
+            }
+            .close-button {
+                top: 12px;
+                right: 15px;
+                font-size: 24px;
+            }
+            .download-apk-button {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+             .apk-popup-content p, .music-request-info p {
+                font-size: 0.95em;
+            }
         }
 
     </style>
@@ -481,7 +536,7 @@
             <a href="#inicio" class="logo-header nav-link" data-page="page-inicio">
                 Mongaguá<span>Web Rádio</span>
             </a>
-            <nav class="nav-menu-header" id="navMenuHeaderElement"> <!-- ID alterado para evitar conflito com variável JS -->
+            <nav class="nav-menu-header" id="navMenuHeaderElement"> 
                 <ul>
                     <li><a href="#inicio" class="nav-link active" data-page="page-inicio">🏠 Início</a></li>
                     <li><a href="#programacao" class="nav-link" data-page="page-programacao">🗓 Programação</a></li>
@@ -588,6 +643,24 @@
         </div>
     </div>
 
+    <!-- Pop-up para Download do APK -->
+    <div id="apkPopupModal" class="modal">
+        <div class="modal-content apk-popup-content">
+            <span class="close-button" id="closeApkModalButton" title="Fechar" aria-label="Fechar modal">×</span>
+            <h3>Baixe nosso Aplicativo!</h3>
+            <p>Leve a Web Rádio Mongaguá com você para onde for! Baixe nosso aplicativo Android (APK) e tenha acesso fácil à nossa programação completa, com a melhor qualidade de som.</p>
+            <a href="https://drive.google.com/file/d/1rGFFWIPCQvXRn_bhov-e4I86JmyN0aVq/view?usp=sharing" target="_blank" class="download-apk-button" id="downloadApkLink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Baixar APK Agora
+            </a>
+            <div class="dont-show-again-container">
+                <input type="checkbox" id="dontShowApkPopupAgain">
+                <label for="dontShowApkPopupAgain">Não mostrar esta mensagem novamente.</label>
+            </div>
+        </div>
+    </div>
+
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const audioPlayer = document.getElementById('audioPlayer');
@@ -604,10 +677,16 @@
         const openRequestModalButton = document.getElementById('openRequestModalButton');
         const closeRequestModalButton = document.getElementById('closeRequestModalButton');
 
-        // const navMenuHeader = document.getElementById('navMenuHeader').querySelector('ul'); // ID original do <nav>
-        const navMenuUL = document.getElementById('navMenuHeaderElement').querySelector('ul'); // Usando novo ID para o <nav> e pegando a <ul>
+        const navMenuUL = document.getElementById('navMenuHeaderElement').querySelector('ul'); 
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         
+        // --- APK Pop-up Elements ---
+        const apkPopupModal = document.getElementById('apkPopupModal');
+        const closeApkModalButton = document.getElementById('closeApkModalButton');
+        const dontShowApkPopupAgainCheckbox = document.getElementById('dontShowApkPopupAgain');
+        const downloadApkLink = document.getElementById('downloadApkLink');
+
+
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         let isMuted = false;
@@ -655,15 +734,13 @@
         }
 
         // --- Mobile Menu Toggle ---
-        if (mobileMenuToggle && navMenuUL) { // Checa se ambos existem
+        if (mobileMenuToggle && navMenuUL) { 
             mobileMenuToggle.addEventListener('click', () => {
                 const isOpen = navMenuUL.classList.toggle('mobile-menu-open');
                 mobileMenuToggle.classList.toggle('active', isOpen);
                 mobileMenuToggle.setAttribute('aria-expanded', isOpen.toString());
             });
         }
-        // Close mobile menu when a link is clicked
-        // Seleciona links dentro da ul que é referenciada por navMenuUL
         document.querySelectorAll('#navMenuHeaderElement ul a').forEach(link => {
             link.addEventListener('click', () => {
                 if (navMenuUL && navMenuUL.classList.contains('mobile-menu-open')) {
@@ -804,10 +881,46 @@
             showPage(initialPageId);
         }
 
-        openRequestModalButton.addEventListener('click', () => { requestModal.style.display = 'flex'; });
-        closeRequestModalButton.addEventListener('click', () => { requestModal.style.display = 'none'; });
-        window.addEventListener('click', (event) => { if (event.target === requestModal) requestModal.style.display = 'none'; });
+        // --- Music Request Modal Logic ---
+        if(openRequestModalButton && requestModal && closeRequestModalButton) {
+            openRequestModalButton.addEventListener('click', () => { requestModal.style.display = 'flex'; });
+            closeRequestModalButton.addEventListener('click', () => { requestModal.style.display = 'none'; });
+            window.addEventListener('click', (event) => { if (event.target === requestModal) requestModal.style.display = 'none'; });
+        }
         
+        // --- APK Pop-up Logic ---
+        if (apkPopupModal && closeApkModalButton && dontShowApkPopupAgainCheckbox && downloadApkLink) {
+            const apkPopupShownKey = 'webradioMongagua_hideApkPopup';
+
+            // Show pop-up on load if not previously hidden
+            if (localStorage.getItem(apkPopupShownKey) !== 'true') {
+                setTimeout(() => { // Pequeno delay para não ser tão abrupto
+                    apkPopupModal.style.display = 'flex';
+                }, 1500);
+            }
+
+            function closeApkPopupAndStorePreference() {
+                apkPopupModal.style.display = 'none';
+                if (dontShowApkPopupAgainCheckbox.checked) {
+                    localStorage.setItem(apkPopupShownKey, 'true');
+                }
+            }
+            
+            closeApkModalButton.addEventListener('click', closeApkPopupAndStorePreference);
+            
+            // Optional: if user clicks download, also treat as wanting to close (and potentially not see again)
+            downloadApkLink.addEventListener('click', () => {
+                 setTimeout(closeApkPopupAndStorePreference, 300); // Give a moment for download to initiate
+            });
+
+            window.addEventListener('click', (event) => { 
+                if (event.target === apkPopupModal) {
+                    closeApkPopupAndStorePreference();
+                }
+            });
+        }
+
+
         shareButton.addEventListener('click', async () => {
             const shareData = { title: 'Web Rádio Mongaguá', text: '🎧 Estou ouvindo a Web Rádio Mongaguá!', url: window.location.origin + window.location.pathname };
             try {
@@ -882,7 +995,6 @@
         updateDateTime();
         updateMuteButtonIcon();
         initializePageFromURL();
-        // A chamada para setupVisualizer() foi removida daqui para ser chamada apenas após interação (primeiro play)
     });
     </script>
 </body>

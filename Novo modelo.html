@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Rádio Mongaguá - Novo Layout</title>
+    <style>
+        :root {
+            /* Azul (Confiança, Calma, Profissionalismo) */
+            --primary-hue: 210; 
+            --primary-color: hsl(var(--primary-hue), 70%, 50%); /* Azul principal mais vibrante */
+            --primary-color-light: hsl(var(--primary-hue), 70%, 60%);
+            --primary-color-dark: hsl(var(--primary-hue), 70%, 40%);
+            --primary-color-translucent: hsla(var(--primary-hue), 70%, 50%, 0.1);
+            --primary-color-translucent-heavy: hsla(var(--primary-hue), 70%, 50%, 0.2);
+
+            /* Laranja (Energia, Otimismo, Ação) - Para CTAs e destaques */
+            --accent-hue: 30; 
+            --accent-color: hsl(var(--accent-hue), 95%, 55%);
+            --accent-color-light: hsl(var(--accent-hue), 95%, 65%);
+            --accent-color-dark: hsl(var(--accent-hue), 95%, 45%);
+            
+            /* Tons Neutros Escuros (Fundo, Sofisticação) */
+            --background-body: #10141C; /* Azul muito escuro, quase preto */
+            --background-surface: #181D28; /* Superfícies principais, player */
+            --background-surface-alt: #202633; /* Variação para contraste */
+            --background-elevated: #252C3B; /* Modais, dropdowns */
+            --background-hover: #2A3140;
+
+            --text-primary: #E8ECF3; /* Branco levemente azulado */
+            --text-secondary: #B0BAC9;
+            --text-muted: #808DA0;
+            --text-on-primary: #FFFFFF;
+            --text-on-accent: #FFFFFF;
+
+            --border-color: #30384A;
+            --border-color-light: #404A60;
+
+            --font-family-main: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            
+            --shadow-small: 0 2px 5px rgba(0,0,0,0.25);
+            --shadow-medium: 0 5px 15px rgba(0,0,0,0.3);
+            --shadow-large: 0 10px 30px rgba(0,0,0,0.35);
+
+            --border-radius-base: 8px;
+            --border-radius-large: 12px;
+            --border-radius-round: 50%;
+
+            --transition-fast: 0.15s ease-out;
+            --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            --header-height: 70px;
+            --player-bar-height: 80px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap');
+
+        /* --- Reset & Base --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--background-body);
+            color: var(--text-primary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--background-body); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: var(--border-radius-base); border: 2px solid var(--background-body); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+
+        .app-container { 
+            display: flex; 
+            flex-direction: column; /* Header no topo, depois conteúdo, depois player */
+            height: 100vh; 
+        }
+
+        /* --- Main Header --- */
+        .main-header {
+            height: var(--header-height);
+            background-color: var(--background-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed; /* Fixa o cabeçalho no topo */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .logo-header {
+            font-size: 1.8em; font-weight: 700; color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .logo-header span {
+            font-weight: 300; color: var(--text-muted);
+            font-size: 0.5em; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+            display: none; /* Ocultar por padrão, mostrar em telas maiores */
+        }
+
+        .nav-menu-header {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espaço entre itens de navegação e botão Pedir Musica */
+        }
+        .nav-menu-header ul {
+            list-style: none;
+            display: flex;
+            gap: 5px; /* Espaço entre links */
+        }
+        .nav-menu-header li a {
+            padding: 10px 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--border-radius-base);
+            font-weight: 500;
+            transition: background-color var(--transition-fast), color var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-menu-header li a:hover {
+            background-color: var(--background-hover);
+            color: var(--text-primary);
+        }
+        .nav-menu-header li a.active {
+            background-color: var(--primary-color-translucent-heavy);
+            color: var(--primary-color-light);
+        }
+
+        .request-music-button-header {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: var(--text-on-accent);
+            border: none;
+            border-radius: var(--border-radius-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .request-music-button-header:hover {
+            background-color: var(--accent-color-light);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-toggle {
+            display: none; /* Oculto por padrão */
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.8em;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: var(--border-radius-round);
+        }
+        .mobile-menu-toggle:hover {
+            background-color: var(--background-hover);
+        }
+        .mobile-menu-toggle .icon-menu,
+        .mobile-menu-toggle.active .icon-close { display: block; }
+        .mobile-menu-toggle.active .icon-menu,
+        .mobile-menu-toggle .icon-close { display: none; }
+
+
+        /* --- Main Content Area --- */
+        .content-wrapper-main {
+            flex-grow: 1; /* Ocupa o espaço restante entre header e player */
+            overflow-y: auto;
+            padding-top: var(--header-height); /* Espaço para o header fixo */
+            padding-bottom: var(--player-bar-height); /* Espaço para o player fixo */
+        }
+        .main-content {
+            padding: 30px 35px; /* Padding interno do conteúdo */
+            max-width: 1200px; /* Limita a largura do conteúdo central */
+            margin: 0 auto; /* Centraliza o conteúdo */
+        }
+
+        .page { display: none; animation: contentFadeIn var(--transition-base) forwards; }
+        .page.active { display: block; }
+        @keyframes contentFadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .page h2 {
+            font-size: 2.4em; font-weight: 700; color: var(--primary-color-light);
+            margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);
+            letter-spacing: -0.5px;
+        }
+        .page p, .page ul li {
+            margin-bottom: 20px; line-height: 1.75; font-size: 1.05em; color: var(--text-secondary);
+        }
+        .page p.lead { font-size: 1.25em; color: var(--text-primary); font-weight: 400; }
+        .page a { color: var(--accent-color); text-decoration: none; font-weight: 500; transition: color var(--transition-fast); }
+        .page a:hover { color: var(--accent-color-light); text-decoration: underline; }
+        .page strong { color: var(--text-primary); font-weight: 600; }
+
+        .schedule-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 25px; font-size: 0.95em; }
+        .schedule-table th, .schedule-table td { border-bottom: 1px solid var(--border-color); padding: 14px 16px; text-align: left; }
+        .schedule-table th { background-color: var(--background-surface-alt); color: var(--primary-color-light); font-weight: 600; }
+        .schedule-table td { color: var(--text-secondary); }
+        .schedule-table tbody tr:hover td { background-color: var(--background-hover); color: var(--text-primary); }
+        .schedule-table thead th:first-child { border-top-left-radius: var(--border-radius-base); }
+        .schedule-table thead th:last-child { border-top-right-radius: var(--border-radius-base); }
+        .schedule-table tbody tr:last-child td:first-child { border-bottom-left-radius: var(--border-radius-base); }
+        .schedule-table tbody tr:last-child td:last-child { border-bottom-right-radius: var(--border-radius-base); }
+
+        .contact-info {
+            background-color: var(--background-surface-alt);
+            padding: 25px 30px;
+            border-radius: var(--border-radius-large);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-medium);
+        }
+        .contact-info p { font-size: 1.1em; color: var(--text-secondary); }
+        .contact-info .email-link {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 15px;
+            padding: 10px 20px; background-color: var(--accent-color); color: var(--text-on-accent);
+            border-radius: var(--border-radius-base); text-decoration: none; font-weight: 600;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+        }
+        .contact-info .email-link:hover { background-color: var(--accent-color-light); transform: translateY(-2px); }
+
+        .social-links { margin-top: 30px; text-align: center; }
+        .social-links a {
+            margin: 0 10px; font-size: 1em; display: inline-block; color: var(--text-secondary);
+            padding: 8px 15px; border: 1px solid var(--border-color-light); border-radius: var(--border-radius-base);
+            text-decoration: none; transition: all var(--transition-fast) ease;
+        }
+        .social-links a:hover {
+            color: var(--accent-color-light); border-color: var(--accent-color);
+            background-color: hsla(var(--accent-hue), 95%, 55%, 0.1); transform: translateY(-2px) scale(1.05);
+        }
+        
+        .main-footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--background-surface);
+        }
+        .main-footer .datetime-info { margin-bottom: 5px; font-variant-numeric: tabular-nums;}
+
+
+        /* --- Player Bar --- */
+        .player-bar {
+            height: var(--player-bar-height);
+            background: linear-gradient(to top, var(--background-surface) 70%, var(--background-surface-alt));
+            padding: 0 30px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.35); z-index: 999; /* Abaixo do header */
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            position: fixed; /* Fixa o player na base */
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .track-info { flex-grow: 1; text-align: left; min-width: 180px; overflow: hidden; margin-right: 20px; }
+        .track-info #nowPlayingProgram {
+            font-size: 1.05em; font-weight: 600; color: var(--primary-color-light);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin-bottom: 2px; display: block;
+        }
+        .track-info #nowPlayingTrack {
+            font-size: 0.85em; color: var(--text-secondary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;
+        }
+
+        #audioVisualizer { width: 120px; height: 40px; margin: 0 15px; }
+
+        .player-controls-group { display: flex; align-items: center; gap: 12px; }
+
+        .control-button {
+            background: transparent; border: none; color: var(--text-secondary);
+            font-size: 1.6em; cursor: pointer; transition: color var(--transition-fast), transform var(--transition-fast);
+            padding: 8px; line-height: 1; border-radius: var(--border-radius-round);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .control-button:hover { color: var(--text-primary); transform: scale(1.1); }
+        .control-button:active { transform: scale(0.95); }
+
+        .play-button {
+            background-color: var(--primary-color); color: var(--text-on-primary);
+            border-radius: var(--border-radius-round); width: 50px; height: 50px; font-size: 1.8em;
+            box-shadow: 0 3px 8px hsla(var(--primary-hue), 70%, 50%, 0.3);
+        }
+        .play-button:hover { background-color: var(--primary-color-light); }
+
+        .time-display { color: var(--text-muted); font-size: 0.9em; margin: 0 10px; min-width: 50px; text-align: center; font-variant-numeric: tabular-nums;}
+
+        .volume-control { display: flex; align-items: center; gap: 8px; }
+        .volume-slider {
+            width: 90px; cursor: pointer; background: transparent;
+            -webkit-appearance: none; appearance: none; height: 5px;
+            background-color: var(--border-color-light); border-radius: 2.5px; outline: none;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 15px; height: 15px;
+            background: var(--primary-color); cursor: pointer; border-radius: var(--border-radius-round);
+            border: 2px solid var(--background-surface);
+        }
+        .volume-slider::-moz-range-track { background: var(--border-color-light); height: 5px; border-radius: 2.5px; }
+        .volume-slider::-moz-range-thumb {
+            width: 13px; height: 13px; background: var(--primary-color); cursor: pointer;
+            border-radius: var(--border-radius-round); border: 2px solid var(--background-surface);
+        }
+
+        .spinner {
+            border: 3px solid hsla(var(--primary-hue), 70%, 50%, 0.2); border-radius: var(--border-radius-round);
+            border-top-color: var(--primary-color); width: 20px; height: 20px;
+            animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Modal Styles --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: hsla(220, 20%, 5%, 0.6); 
+            backdrop-filter: blur(6px) saturate(120%); 
+            animation: modalFadeIn var(--transition-base) forwards; align-items: center; justify-content: center;
+        }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background-color: var(--background-elevated); padding: 30px 35px;
+            border: 1px solid var(--border-color-light); width: 90%; max-width: 500px;
+            border-radius: var(--border-radius-large); position: relative;
+            box-shadow: var(--shadow-large);
+            animation: modalSlideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+        @keyframes modalSlideIn { 
+            from { transform: translateY(25px) scale(0.97); opacity: 0; } 
+            to { transform: translateY(0) scale(1); opacity: 1; } 
+        }
+
+        .modal-content h3 { color: var(--primary-color-light); margin-bottom: 20px; font-size: 1.7em; font-weight: 600;}
+        .close-button {
+            color: var(--text-muted); position: absolute; top: 18px; right: 22px;
+            font-size: 28px; font-weight: 300; line-height: 1; cursor: pointer;
+            transition: color var(--transition-fast), transform var(--transition-fast); padding: 5px;
+            border-radius: var(--border-radius-round);
+        }
+        .close-button:hover, .close-button:focus { color: var(--text-primary); transform: rotate(90deg); background-color: var(--background-hover);}
+
+        .music-request-info p { font-size: 1.05em; color: var(--text-secondary); line-height: 1.7; margin-bottom: 15px; }
+        .music-request-info .email-link {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;
+            padding: 10px 20px; background-color: var(--accent-color); color: var(--text-on-accent);
+            border-radius: var(--border-radius-base); text-decoration: none; font-weight: 600;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+        }
+        .music-request-info .email-link:hover { background-color: var(--accent-color-light); transform: translateY(-2px); }
+
+
+        /* --- Responsive Adjustments for Header --- */
+        @media (min-width: 769px) {
+            .logo-header span { display: inline; } /* Mostrar "Web Rádio" no logo */
+        }
+
+        @media (max-width: 768px) {
+            .main-header { padding: 0 15px; }
+            .logo-header { font-size: 1.6em; }
+            
+            .nav-menu-header ul {
+                display: none; /* Esconder lista de links */
+                position: absolute;
+                top: var(--header-height); /* Abaixo do header */
+                left: 0;
+                right: 0;
+                background-color: var(--background-elevated);
+                flex-direction: column;
+                padding: 10px 0;
+                box-shadow: var(--shadow-medium);
+                border-top: 1px solid var(--border-color);
+            }
+            .nav-menu-header ul.mobile-menu-open {
+                display: flex; /* Mostrar quando ativo */
+            }
+            .nav-menu-header li { width: 100%; }
+            .nav-menu-header li a {
+                padding: 12px 20px;
+                justify-content: flex-start;
+                border-radius: 0;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .nav-menu-header li:last-child a { border-bottom: none; }
+
+            .request-music-button-header { /* Opcional: Mover para dentro do menu mobile ou manter */
+                font-size: 0.9em;
+                padding: 8px 15px;
+            }
+            .request-music-button-header .icon { display: none; } /* Esconder ícone se o texto for longo */
+
+
+            .mobile-menu-toggle { display: block; /* Mostrar botão hamburger */ }
+            .main-content { padding: 20px; }
+            .page h2 {font-size: 2em;}
+        }
+
+        @media (max-width: 576px) {
+            .player-bar { height: 70px; padding: 0 15px; }
+            .player-controls-group { gap: 8px; }
+            .control-button { font-size: 1.5em; padding: 8px; }
+            .play-button { width: 45px; height: 45px; font-size: 1.7em; }
+            #audioVisualizer { display: none; }
+            .track-info #nowPlayingProgram { font-size: 0.95em; }
+            .track-info #nowPlayingTrack { font-size: 0.75em; }
+            .time-display { font-size: 0.8em; margin: 0 6px; }
+            .volume-control { display: none; }
+            .request-music-button-header {
+                padding: 8px 12px;
+                font-size: 0.85em;
+            }
+            .request-music-button-header span:not(.icon) { display: none; } /* Mostrar só o ícone */
+            .request-music-button-header .icon { margin-right: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <a href="#inicio" class="logo-header nav-link" data-page="page-inicio">
+                Mongaguá<span>Web Rádio</span>
+            </a>
+            <nav class="nav-menu-header" id="navMenuHeader">
+                <ul>
+                    <li><a href="#inicio" class="nav-link active" data-page="page-inicio">🏠 Início</a></li>
+                    <li><a href="#programacao" class="nav-link" data-page="page-programacao">🗓 Programação</a></li>
+                    <li><a href="#contato" class="nav-link" data-page="page-contato">✉️ Contato</a></li>
+                </ul>
+                <button id="openRequestModalButton" class="request-music-button-header">
+                    <span class="icon">🎤</span> <span>Pedir Música</span>
+                </button>
+            </nav>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu" aria-expanded="false">
+                <span class="icon-menu">☰</span>
+                <span class="icon-close">✕</span>
+            </button>
+        </header>
+
+        <div class="content-wrapper-main">
+            <main class="main-content">
+                 <section id="page-inicio" class="page active">
+                    <h2>Bem-vindo à Web Rádio Mongaguá!</h2>
+                    <p class="lead">Sintonize a energia contagiante da cidade! Música de qualidade, informação relevante e entretenimento que inspira, direto de Mongaguá para o mundo, 24 horas no ar.</p>
+                    <p>Acompanhe nossa programação ao vivo no player abaixo. Estamos sempre online, trazendo a trilha sonora perfeita para o seu dia. Explore nossas seções para conhecer a grade completa e interagir conosco.</p>
+                    <h3>Destaques da Rádio</h3>
+                    <p>Fique por dentro dos <strong>eventos locais</strong>, entrevistas exclusivas com <strong>personalidades da região</strong>, sets de DJs da cena praiana e <strong>promoções especiais</strong>. Nossa missão é conectar você com o melhor da cultura e entretenimento de Mongaguá, com confiança e profissionalismo.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com" target="_blank" title="Facebook">Facebook</a>
+                        <a href="https://instagram.com" target="_blank" title="Instagram">Instagram</a>
+                        <a href="https://twitter.com" target="_blank" title="X (Twitter)">X (Twitter)</a>
+                    </div>
+                </section>
+                <section id="page-programacao" class="page">
+                    <h2>Nossa Programação Semanal</h2>
+                    <p>Confira os horários dos seus programas favoritos. Acompanhe o som que embala Mongaguá! O nome do programa atual é exibido no player abaixo.</p>
+                    <table class="schedule-table">
+                        <thead><tr><th>Horário</th><th>Segunda a Sexta</th><th>Sábado</th><th>Domingo</th></tr></thead>
+                        <tbody>
+                            <tr><td>07:00 - 09:00</td><td>Manhã Litoral</td><td>Energia do Fim de Semana</td><td>Domingo Relax</td></tr>
+                            <tr><td>09:00 - 12:00</td><td>Sucessos na Areia</td><td>Top Hits Litoral</td><td>Clássicos da Praia</td></tr>
+                            <tr><td>12:00 - 14:00</td><td>Almoço Musical Tropical</td><td>Feijoada com Samba</td><td>Especial MPB</td></tr>
+                            <tr><td>14:00 - 17:00</td><td>Tarde Total</td><td>Esquenta Litoral Fest</td><td>Sons do Brasil</td></tr>
+                            <tr><td>17:00 - 19:00</td><td>Fim de Tarde em Mongaguá</td><td>Sunset Beats</td><td>Luau Web Rádio</td></tr>
+                            <tr><td>19:00 - 22:00</td><td>Noites Tropicais</td><td>Balada Litoral</td><td>Viagem Musical</td></tr>
+                            <tr><td colspan="4" style="text-align: center; background-color: var(--background-surface-alt); border-bottom-left-radius: var(--border-radius-base); border-bottom-right-radius: var(--border-radius-base);"><strong>Madrugada e horários vagos:</strong> Auto DJ Web Rádio Mongaguá com a melhor seleção musical, 24h!</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section id="page-contato" class="page">
+                    <h2>Entre em Contato</h2>
+                    <div class="contact-info">
+                        <p>Sua participação é muito importante! Envie suas sugestões, peça sua música (use o botão no cabeçalho!), mande um alô para Mongaguá ou anuncie conosco.</p>
+                        <p>Envie um e-mail para:</p>
+                        <a href="mailto:contato@webradiomongagua.com.br" class="email-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            contato@webradiomongagua.com.br
+                        </a>
+                        <p style="margin-top: 20px;">Estamos ansiosos para ouvir de você!</p>
+                    </div>
+                    <div class="social-links">
+                        <p>Ou nos encontre nas redes sociais e participe da nossa comunidade:</p>
+                        <a href="https://facebook.com" target="_blank" title="Facebook">Facebook</a>
+                        <a href="https://instagram.com" target="_blank" title="Instagram">Instagram</a>
+                        <a href="https://twitter.com" target="_blank" title="X (Twitter)">X (Twitter)</a>
+                    </div>
+                </section>
+            </main>
+            <footer class="main-footer">
+                <div class="datetime-info" id="currentInfo">Carregando data e hora...</div>
+                <p>© <span id="currentYear"></span> Web Rádio Mongaguá. Todos os direitos reservados.</p>
+            </footer>
+        </div>
+
+
+        <div class="player-bar">
+            <div class="track-info">
+                <span id="nowPlayingProgram">Carregando...</span>
+                <span id="nowPlayingTrack">Web Rádio Mongaguá</span>
+            </div>
+            <canvas id="audioVisualizer"></canvas>
+            <div class="player-controls-group">
+                <button id="playPauseButton" class="control-button play-button" aria-label="Tocar/Pausar">▶</button>
+                <span id="currentTimeDisplay" class="time-display">--:--</span>
+            </div>
+            <div class="player-controls-group">
+                <button id="shareButton" class="control-button" title="Compartilhar Rádio" aria-label="Compartilhar">🔗</button>
+                <button id="muteButton" class="control-button" title="Mudo/Som" aria-label="Mudo/Som">🔊</button>
+                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="0.8" title="Volume" aria-label="Controle de volume">
+            </div>
+            <audio id="audioPlayer" src="https://stream.zeno.fm/7q81aqy5wnhvv" preload="metadata" crossOrigin="anonymous"></audio>
+        </div>
+    </div>
+
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeRequestModalButton" title="Fechar" aria-label="Fechar modal">×</span>
+            <h3>Peça sua Música</h3>
+             <div class="music-request-info">
+                <p>Queremos tocar o que você ama ouvir! Para pedir sua música favorita, é simples:</p>
+                <p>Envie um e-mail para nós com o <strong>nome da música</strong> e o <strong>artista/banda</strong>. Nossa equipe fará o possível para incluir seu pedido em nossa programação!</p>
+                <a href="mailto:contato@webradiomongagua.com.br?subject=Pedido%20de%20Música%20-%20Web%20Rádio%20Mongaguá" class="email-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Enviar Pedido por E-mail
+                </a>
+                 <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-muted);">Lembre-se: os pedidos são analisados e atendidos conforme a disponibilidade e o estilo da nossa programação. Contamos com sua compreensão!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseButton = document.getElementById('playPauseButton');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const muteButton = document.getElementById('muteButton');
+        const currentTimeDisplay = document.getElementById('currentTimeDisplay');
+        const currentInfoDisplay = document.getElementById('currentInfo');
+        const nowPlayingProgramDisplay = document.getElementById('nowPlayingProgram');
+        const nowPlayingTrackDisplay = document.getElementById('nowPlayingTrack');
+        const shareButton = document.getElementById('shareButton');
+        
+        const requestModal = document.getElementById('requestModal');
+        const openRequestModalButton = document.getElementById('openRequestModalButton');
+        const closeRequestModalButton = document.getElementById('closeRequestModalButton');
+
+        const navMenuHeader = document.getElementById('navMenuHeader').querySelector('ul');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        let isMuted = false;
+        let lastVolume = audioPlayer.volume;
+
+        const radioSchedule = [
+            { days: [1, 2, 3, 4, 5], start: "07:00", end: "09:00", program: "Manhã Litoral" },
+            { days: [1, 2, 3, 4, 5], start: "09:00", end: "12:00", program: "Sucessos na Areia" },
+            { days: [1, 2, 3, 4, 5], start: "12:00", end: "14:00", program: "Almoço Musical Tropical" },
+            { days: [1, 2, 3, 4, 5], start: "14:00", end: "17:00", program: "Tarde Total" },
+            { days: [1, 2, 3, 4, 5], start: "17:00", end: "19:00", program: "Fim de Tarde em Mongaguá" },
+            { days: [1, 2, 3, 4, 5], start: "19:00", end: "22:00", program: "Noites Tropicais" },
+            { days: [6], start: "07:00", end: "09:00", program: "Energia do Fim de Semana" },
+            { days: [6], start: "09:00", end: "12:00", program: "Top Hits Litoral" },
+            { days: [6], start: "12:00", end: "14:00", program: "Feijoada com Samba" },
+            { days: [6], start: "14:00", end: "17:00", program: "Esquenta Litoral Fest" },
+            { days: [6], start: "17:00", end: "19:00", program: "Sunset Beats" },
+            { days: [6], start: "19:00", end: "22:00", program: "Balada Litoral" },
+            { days: [0], start: "07:00", end: "09:00", program: "Domingo Relax" },
+            { days: [0], start: "09:00", end: "12:00", program: "Clássicos da Praia" },
+            { days: [0], start: "12:00", end: "14:00", program: "Especial MPB" },
+            { days: [0], start: "14:00", end: "17:00", program: "Sons do Brasil" },
+            { days: [0], start: "17:00", end: "19:00", program: "Luau Web Rádio" },
+            { days: [0], start: "19:00", end: "22:00", program: "Viagem Musical" },
+        ];
+
+        function getCurrentProgramName() {
+            const now = new Date();
+            const currentDay = now.getDay(); 
+            const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            for (const slot of radioSchedule) {
+                if (slot.days.includes(currentDay) && currentTime >= slot.start && currentTime < slot.end) {
+                    return slot.program;
+                }
+            }
+            return "Auto DJ Web Rádio Mongaguá";
+        }
+
+        function updatePlayerDisplay() {
+            const programName = getCurrentProgramName();
+            nowPlayingProgramDisplay.textContent = programName;
+            nowPlayingTrackDisplay.textContent = (programName === "Auto DJ Web Rádio Mongaguá")
+                ? "A melhor seleção musical, 24h!"
+                : "Web Rádio Mongaguá Ao Vivo";
+        }
+
+        // --- Mobile Menu Toggle ---
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                const isOpen = navMenuHeader.classList.toggle('mobile-menu-open');
+                mobileMenuToggle.classList.toggle('active', isOpen);
+                mobileMenuToggle.setAttribute('aria-expanded', isOpen.toString());
+            });
+        }
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#navMenuHeader ul a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenuHeader.classList.contains('mobile-menu-open')) {
+                    navMenuHeader.classList.remove('mobile-menu-open');
+                    mobileMenuToggle.classList.remove('active');
+                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+
+
+        function togglePlayPause() {
+            if (audioPlayer.paused || audioPlayer.ended) {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume().catch(e => console.error("AudioContext resume error:", e));
+                }
+                audioPlayer.play().catch(error => {
+                    console.error("Erro ao tocar áudio:", error);
+                    playPauseButton.innerHTML = '▶';
+                    playPauseButton.setAttribute('aria-label', 'Tocar');
+                    nowPlayingProgramDisplay.textContent = "Erro ao Conectar";
+                    nowPlayingTrackDisplay.textContent = "Verifique sua conexão ou tente mais tarde.";
+                });
+                if (!visualizerInitialized && audioContext) {
+                    setupVisualizer();
+                }
+            } else {
+                audioPlayer.pause();
+            }
+        }
+
+        playPauseButton.addEventListener('click', togglePlayPause);
+
+        audioPlayer.addEventListener('play', () => { playPauseButton.innerHTML = '❚❚'; playPauseButton.setAttribute('aria-label', 'Pausar'); updatePlayerDisplay(); });
+        audioPlayer.addEventListener('pause', () => { playPauseButton.innerHTML = '▶'; playPauseButton.setAttribute('aria-label', 'Tocar'); });
+        audioPlayer.addEventListener('waiting', () => { playPauseButton.innerHTML = '<span class="spinner"></span>'; playPauseButton.setAttribute('aria-label', 'Carregando'); nowPlayingProgramDisplay.textContent = "Carregando..."; nowPlayingTrackDisplay.textContent = "Aguarde"; });
+        audioPlayer.addEventListener('playing', () => { playPauseButton.innerHTML = '❚❚'; playPauseButton.setAttribute('aria-label', 'Pausar'); updatePlayerDisplay(); });
+        audioPlayer.addEventListener('error', (e) => { playPauseButton.innerHTML = '⚠'; playPauseButton.setAttribute('aria-label', 'Erro'); nowPlayingProgramDisplay.textContent = "Erro no Stream"; nowPlayingTrackDisplay.textContent = "Recarregue"; console.error("Erro no player:", e); });
+
+        volumeSlider.addEventListener('input', (event) => {
+            const newVolume = parseFloat(event.target.value);
+            audioPlayer.volume = newVolume;
+            audioPlayer.muted = newVolume === 0;
+            isMuted = newVolume === 0;
+            if (newVolume > 0) lastVolume = newVolume;
+            updateMuteButtonIcon();
+        });
+
+        muteButton.addEventListener('click', () => {
+            isMuted = !isMuted;
+            audioPlayer.muted = isMuted;
+            if (isMuted) { volumeSlider.value = 0; } 
+            else { audioPlayer.volume = lastVolume > 0 ? lastVolume : 0.5; volumeSlider.value = audioPlayer.volume; }
+            updateMuteButtonIcon();
+        });
+
+        function updateMuteButtonIcon() {
+            if (audioPlayer.muted || audioPlayer.volume === 0) { muteButton.textContent = '🔇'; muteButton.setAttribute('aria-label', 'Ativar som'); } 
+            else if (audioPlayer.volume < 0.5) { muteButton.textContent = '🔉'; muteButton.setAttribute('aria-label', 'Desativar som'); } 
+            else { muteButton.textContent = '🔊'; muteButton.setAttribute('aria-label', 'Desativar som'); }
+            if (!audioPlayer.muted) volumeSlider.value = audioPlayer.volume;
+            else if (audioPlayer.volume > 0) lastVolume = audioPlayer.volume;
+        }
+        audioPlayer.addEventListener('volumechange', updateMuteButtonIcon);
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration === Infinity || isNaN(audioPlayer.duration)) { currentTimeDisplay.innerText = "AO VIVO"; } 
+            else if (isFinite(audioPlayer.currentTime)) {
+                const m = Math.floor(audioPlayer.currentTime / 60);
+                const s = Math.floor(audioPlayer.currentTime % 60);
+                currentTimeDisplay.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            } else { currentTimeDisplay.innerText = "--:--"; }
+        });
+
+        setInterval(updatePlayerDisplay, 30000); 
+        
+        function updateDateTime() {
+            const now = new Date();
+            const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Sao_Paulo' };
+            let formattedDate = now.toLocaleDateString('pt-BR', optionsDate);
+            formattedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            let formattedTime = now.toLocaleTimeString('pt-BR', optionsTime);
+            if (currentInfoDisplay) currentInfoDisplay.innerHTML = `${formattedDate}<br>${formattedTime} (Brasília)`;
+        }
+        setInterval(updateDateTime, 1000);
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        const mainContentArea = document.querySelector('.main-content');
+
+        function showPage(pageId) {
+            pages.forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) { targetPage.classList.add('active'); mainContentArea.scrollTop = 0; }
+            navLinks.forEach(l => {
+                l.classList.remove('active');
+                if (l.dataset.page === pageId) l.classList.add('active');
+            });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                if (document.getElementById(pageId)) {
+                    showPage(pageId);
+                    history.pushState({ page: pageId }, '', link.getAttribute('href'));
+                }
+                 // Fechar menu mobile se estiver aberto
+                if (navMenuHeader.classList.contains('mobile-menu-open')) {
+                    navMenuHeader.classList.remove('mobile-menu-open');
+                    mobileMenuToggle.classList.remove('active');
+                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+
+        window.addEventListener('popstate', (event) => {
+            const targetPageId = event.state?.page || (window.location.hash.substring(1) ? `page-${window.location.hash.substring(1)}` : 'page-inicio') || 'page-inicio';
+            const navLinkForPage = document.querySelector(`.nav-link[data-page="${targetPageId}"]`);
+            showPage(navLinkForPage ? targetPageId : 'page-inicio');
+        });
+        
+        function initializePageFromURL() {
+            let initialPageId = 'page-inicio';
+            if (window.location.hash) {
+                const hashTarget = `page-${window.location.hash.substring(1)}`;
+                if (document.getElementById(hashTarget)) { initialPageId = hashTarget; } 
+                else { history.replaceState({ page: 'page-inicio' }, '', '#inicio'); }
+            } else { history.replaceState({ page: 'page-inicio' }, '', '#inicio'); }
+            showPage(initialPageId);
+        }
+
+        openRequestModalButton.addEventListener('click', () => { requestModal.style.display = 'flex'; });
+        closeRequestModalButton.addEventListener('click', () => { requestModal.style.display = 'none'; });
+        window.addEventListener('click', (event) => { if (event.target === requestModal) requestModal.style.display = 'none'; });
+        
+        shareButton.addEventListener('click', async () => {
+            const shareData = { title: 'Web Rádio Mongaguá', text: '🎧 Estou ouvindo a Web Rádio Mongaguá!', url: window.location.origin + window.location.pathname };
+            try {
+                if (navigator.share) { await navigator.share(shareData); } 
+                else {
+                    const mailtoLink = `mailto:?subject=${encodeURIComponent(shareData.title)}&body=${encodeURIComponent(shareData.text + '\n' + shareData.url)}`;
+                    if(navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(shareData.url);
+                        alert('Link copiado! Compartilhe.\nOu, uma janela de e-mail será aberta.');
+                    } else { alert('Copie o link (URL) para compartilhar.\nOu, uma janela de e-mail será aberta.'); }
+                    setTimeout(() => window.open(mailtoLink, '_blank'), 500);
+                }
+            } catch (err) { console.error('Erro ao compartilhar:', err); alert('Não foi possível compartilhar. Tente copiar o link.'); }
+        });
+
+        let audioContext, analyser, sourceNode, visualizerCanvas, visualizerCtx, dataArray, bufferLength;
+        let visualizerInitialized = false;
+
+        try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } 
+        catch(e) { console.warn("Web Audio API não suportada.", e); if(document.getElementById('audioVisualizer')) document.getElementById('audioVisualizer').style.display = 'none'; }
+
+        function setupVisualizer() {
+            if (!audioContext || visualizerInitialized) return;
+            if (audioContext.state === 'suspended') {
+                 audioContext.resume().catch(e => { console.error("Falha ao resumir AudioContext:", e); if(document.getElementById('audioVisualizer')) document.getElementById('audioVisualizer').style.display = 'none'; return; });
+            }
+            try {
+                if(!sourceNode) sourceNode = audioContext.createMediaElementSource(audioPlayer);
+                analyser = audioContext.createAnalyser();
+                sourceNode.connect(analyser);
+                analyser.connect(audioContext.destination);
+            } catch (e) { console.error("Erro ao conectar Web Audio API:", e); if(document.getElementById('audioVisualizer')) document.getElementById('audioVisualizer').style.display = 'none'; return; }
+            
+            analyser.fftSize = 64; 
+            analyser.smoothingTimeConstant = 0.8;
+            bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            visualizerCanvas = document.getElementById('audioVisualizer');
+            if (!visualizerCanvas) return; // Certificar que o canvas existe
+            visualizerCtx = visualizerCanvas.getContext('2d');
+            visualizerInitialized = true;
+            drawVisualizer();
+        }
+
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer); 
+            if (!visualizerInitialized || !visualizerCtx || audioPlayer.paused || audioPlayer.ended || !visualizerCanvas) {
+                if(visualizerCtx && visualizerCanvas) visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+                return;
+            }
+            analyser.getByteFrequencyData(dataArray);
+            visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+            
+            const barWidth = (visualizerCanvas.width / bufferLength) * 2.2;
+            let barHeight;
+            let x = 0;
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+            const primaryHue = getComputedStyle(document.documentElement).getPropertyValue('--primary-hue').trim();
+
+            for (let i = 0; i < bufferLength; i++) {
+                barHeight = (dataArray[i] / 255) * visualizerCanvas.height * 0.7;
+                const gradient = visualizerCtx.createLinearGradient(x, visualizerCanvas.height, x, visualizerCanvas.height - barHeight);
+                gradient.addColorStop(0, primaryColor);
+                gradient.addColorStop(1, `hsla(${primaryHue}, 70%, 65%, 0.5)`);
+                visualizerCtx.fillStyle = gradient;
+                visualizerCtx.fillRect(x, visualizerCanvas.height - barHeight, barWidth - 2 , barHeight);
+                x += barWidth;
+            }
+        }
+
+        updatePlayerDisplay();
+        updateDateTime();
+        updateMuteButtonIcon();
+        initializePageFromURL();
+        if (audioContext) setupVisualizer(); // Tentativa de configurar visualizador
+    });
+    </script>
+</body>
+</html>

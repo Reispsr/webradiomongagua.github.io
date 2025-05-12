@@ -275,7 +275,13 @@
             right: 0;
         }
 
-        .track-info { flex-grow: 1; text-align: left; min-width: 180px; overflow: hidden; margin-right: 20px; }
+        .track-info { 
+            flex-grow: 1; 
+            text-align: left; 
+            min-width: 180px; 
+            overflow: hidden; 
+            margin-right: 20px; 
+        }
         .track-info #nowPlayingProgram {
             font-size: 1.05em; font-weight: 600; color: var(--primary-color-light);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -418,15 +424,38 @@
         }
 
         @media (max-width: 576px) {
-            .player-bar { height: 70px; padding: 0 15px; }
-            .player-controls-group { gap: 8px; }
-            .control-button { font-size: 1.5em; padding: 8px; }
-            .play-button { width: 45px; height: 45px; font-size: 1.7em; }
-            #audioVisualizer { display: none; }
-            .track-info #nowPlayingProgram { font-size: 0.95em; }
-            .track-info #nowPlayingTrack { font-size: 0.75em; }
-            .time-display { font-size: 0.8em; margin: 0 6px; }
-            .volume-control { display: none; }
+            .player-bar {
+                height: 70px;
+                padding: 0 10px; /* Reduzido padding lateral */
+            }
+            .player-controls-group {
+                gap: 5px; /* Reduzido gap interno dos grupos de controle */
+            }
+            .control-button { /* Afeta share, mute e o ícone dentro do playPause */
+                font-size: 1.3em; /* Reduzido tamanho geral dos ícones/botões */
+                padding: 6px;     /* Reduzido padding dos botões */
+            }
+            .play-button { /* O container do botão play/pause */
+                width: 40px;      /* Diminuído */
+                height: 40px;     /* Diminuído */
+                font-size: 1.5em; /* Tamanho do ícone play/pause dentro do botão (menor que o 1.7em anterior) */
+            }
+            #audioVisualizer { display: none; } /* Correto */
+            .track-info {
+                flex-shrink: 1;    /* Permitir que encolha, se necessário */
+                min-width: 70px;   /* Mínimo bem pequeno para caber nome curto */
+                margin-right: 5px; /* Espaço menor antes dos controles */
+            }
+            .track-info #nowPlayingProgram { font-size: 0.85em; } /* Reduzido texto da faixa */
+            .track-info #nowPlayingTrack { font-size: 0.7em; }   /* Reduzido texto da música */
+            
+            .time-display {
+                font-size: 0.75em; /* Reduzido texto do tempo */
+                margin: 0 4px;     /* Ajustada margem do tempo */
+                min-width: 35px;   /* Ajustado min-width para o tempo */
+            }
+            .volume-control { display: none; } /* Correto */
+            
             .request-music-button-header {
                 padding: 8px 12px;
                 font-size: 0.85em;
@@ -713,12 +742,15 @@
 
         const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.page');
-        const mainContentArea = document.querySelector('.main-content');
+        const mainContentArea = document.querySelector('.content-wrapper-main'); // Mudança aqui para .content-wrapper-main
 
         function showPage(pageId) {
             pages.forEach(p => p.classList.remove('active'));
             const targetPage = document.getElementById(pageId);
-            if (targetPage) { targetPage.classList.add('active'); mainContentArea.scrollTop = 0; }
+            if (targetPage) { 
+                targetPage.classList.add('active'); 
+                if (mainContentArea) mainContentArea.scrollTop = 0; // Scroll para o topo do wrapper
+            }
             navLinks.forEach(l => {
                 l.classList.remove('active');
                 if (l.dataset.page === pageId) l.classList.add('active');
@@ -807,11 +839,11 @@
         }
 
         function drawVisualizer() {
-            requestAnimationFrame(drawVisualizer); 
-            if (!visualizerInitialized || !visualizerCtx || audioPlayer.paused || audioPlayer.ended || !visualizerCanvas) {
+            if (!visualizerInitialized || !visualizerCtx || !visualizerCanvas || audioPlayer.paused || audioPlayer.ended) {
                 if(visualizerCtx && visualizerCanvas) visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
                 return;
             }
+            requestAnimationFrame(drawVisualizer); 
             analyser.getByteFrequencyData(dataArray);
             visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
             
@@ -832,11 +864,16 @@
             }
         }
 
+        // Correção: mainContentArea para scroll de página
+        // const mainContentArea = document.querySelector('.main-content'); // Esta linha estava duplicada e incorreta para o propósito.
+        // A linha correta está dentro da função showPage, usando o seletor '.content-wrapper-main'
+
         updatePlayerDisplay();
         updateDateTime();
         updateMuteButtonIcon();
         initializePageFromURL();
-        if (audioContext) setupVisualizer(); // Tentativa de configurar visualizador
+        // Tenta configurar o visualizador somente se houver contexto de áudio e o player estiver pronto para tocar
+        // A chamada para setupVisualizer() agora está dentro de togglePlayPause() e após a tentativa de play
     });
     </script>
 </body>
